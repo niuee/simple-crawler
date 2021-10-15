@@ -79,6 +79,8 @@ int main(int argc, char const *argv[])
 		}
         
         
+    }else{
+        cout<<RED<<"Wrong format<<endl";
     }
     
     return 0;
