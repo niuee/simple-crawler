@@ -39,9 +39,9 @@ int main(int argc, char const *argv[])
 {
 
     int urlListSize = 0;
-	int urlListMaxSize = 0;
-	//const char ** urlRoots = (const char **)malloc((argc - 1)*sizeof(char *));
-	if(argc == 1){
+    int urlListMaxSize = 0;
+    //const char ** urlRoots = (const char **)malloc((argc - 1)*sizeof(char *));
+    if(argc == 1){
         cout<<RED<<"Please provide at least 1 url for crawling."<<NC<<endl;
     }
     else if(argc >= 2){
@@ -52,31 +52,31 @@ int main(int argc, char const *argv[])
             }
             urlListMaxSize = atoi(argv[2]);
 
-			//std::cout<<urlListMaxSize<<std::endl;
+            //std::cout<<urlListMaxSize<<std::endl;
             if(!urlListMaxSize && argc <= 3){
                 cout<<RED<<"Please Enter a valid List Number!"<<NC<<endl;
-				EXIT_FAILURE;
+                EXIT_FAILURE;
             }
             else{
-				const char* urlRoots[argc - 3];
-				//std::cout<<"Here 1"<<std::endl;
-				for(int i = 3;i < argc;i++){
-					urlRoots[i - 3] = strdup(argv[i]);
-				}
-				//std::cout<<"Here 2"<<std::endl;
-				WebCrawler crawler(urlListMaxSize, argc - 3, urlRoots);
-				crawler.crawl();
+                const char* urlRoots[argc - 3];
+                //std::cout<<"Here 1"<<std::endl;
+                for(int i = 3;i < argc;i++){
+                    urlRoots[i - 3] = strdup(argv[i]);
+                }
+                //std::cout<<"Here 2"<<std::endl;
+                WebCrawler crawler(urlListMaxSize, argc - 3, urlRoots);
+                crawler.crawl();
             }
         }
-		else{
-			const char* urlRoots[argc - 1];
-			urlListMaxSize = 1000;
-			for(int i = 1;i < argc;i++){
-				urlRoots[i-1] = strdup(argv[i]);
-			}
-			WebCrawler crawler(urlListMaxSize, argc - 1, urlRoots);
+        else{
+            const char* urlRoots[argc - 1];
+            urlListMaxSize = 1000;
+            for(int i = 1;i < argc;i++){
+                urlRoots[i-1] = strdup(argv[i]);
+            }
+            WebCrawler crawler(urlListMaxSize, argc - 1, urlRoots);
             crawler.crawl();
-		}
+        }
         
         
     }else{
@@ -99,9 +99,9 @@ WebCrawler::WebCrawler(int maxUrls, int nurlRoots, const char ** urlRoots){
     _urlArray = (URLRecord *)malloc(_maxUrls*sizeof(URLRecord));
     _headURL = 0; 
     _tailURL = 0;
-	_urlToUrlRecord = new HashTable<int>();
-	_wordToURLRecordList = new HashTable<list<int> >();
-	//std::cout<<*urlRoots<<std::endl;
+    _urlToUrlRecord = new HashTable<int>();
+    _wordToURLRecordList = new HashTable<list<int> >();
+    //std::cout<<*urlRoots<<std::endl;
     int indexofURLArray = 0; // index for inserting the URLRecord Object into their array corresponding to the index of the url in the _urlArray
     int n = 0; //length of the url content
     int wordCount = 0; // word count for the description
@@ -111,21 +111,21 @@ WebCrawler::WebCrawler(int maxUrls, int nurlRoots, const char ** urlRoots){
 
 
     for (int i = 0; i < nurlRoots;i++){
-    	urlContent = fetchHTML(strdup(urlRoots[i]), &n);
+        urlContent = fetchHTML(strdup(urlRoots[i]), &n);
         if(urlContent != NULL && strlen(urlContent) != 0){
             URLRecord newRecord;
             newRecord._url = strdup(urlRoots[i]);
-			// the string as a key to check if the hash table already contains the url key
-			
-			string urlCheck = urlRoots[i];
-			//std::cout<<urlCheck<<endl;
-			int urlIndex = 0;
-			if(!_urlToUrlRecord->find(urlCheck, &urlIndex)){
-				// if the find table function does not find the key in the hash table add the URLRecord into the hash table
-				_urlToUrlRecord->insertItem(urlCheck, indexofURLArray);
-				_urlArray[indexofURLArray] = newRecord; // add the URLRecord into the _urlArray
-				indexofURLArray++; // increment index
-			}
+            // the string as a key to check if the hash table already contains the url key
+            
+            string urlCheck = urlRoots[i];
+            //std::cout<<urlCheck<<endl;
+            int urlIndex = 0;
+            if(!_urlToUrlRecord->find(urlCheck, &urlIndex)){
+                // if the find table function does not find the key in the hash table add the URLRecord into the hash table
+                _urlToUrlRecord->insertItem(urlCheck, indexofURLArray);
+                _urlArray[indexofURLArray] = newRecord; // add the URLRecord into the _urlArray
+                indexofURLArray++; // increment index
+            }
         }
     }
     _tailURL = indexofURLArray;
@@ -136,141 +136,141 @@ WebCrawler::WebCrawler(int maxUrls, int nurlRoots, const char ** urlRoots){
         EXIT_FAILURE;
         exit(1);
     }
-	//std::cout<<"Tail URL: "<<_tailURL<<std::endl;
-	//
+    //std::cout<<"Tail URL: "<<_tailURL<<std::endl;
+    //
 }
 
 
 
 void
 WebCrawler::crawl(){ 
-	
-	// a C string for the content retrieved from the urls
-	//char * urlContent = NULL;
-	
-	// the number of char of the content fetched by fetchHTML
-	int nForFetchHTML;
+    
+    // a C string for the content retrieved from the urls
+    //char * urlContent = NULL;
+    
+    // the number of char of the content fetched by fetchHTML
+    int nForFetchHTML;
 
-	// the HTML doc parser for parsing the links and the contents
-	HTMLParserContent multiParser;
-	
-	PunctuationParser puncParser(" ");
+    // the HTML doc parser for parsing the links and the contents
+    HTMLParserContent multiParser;
+    
+    PunctuationParser puncParser(" ");
 
-	// the string for urlDescriptions that go into the _description of an URLRecord struct that is in the _urlArray limited to 500 chars not counting space
-	string urlDescription = "";
+    // the string for urlDescriptions that go into the _description of an URLRecord struct that is in the _urlArray limited to 500 chars not counting space
+    string urlDescription = "";
 
-	// the string for the entire contents parsed regardless of number of chars; this is for storing words into the word Hash Table
-	string urlContentWithoutTags = "";
+    // the string for the entire contents parsed regardless of number of chars; this is for storing words into the word Hash Table
+    string urlContentWithoutTags = "";
 
-	// the links retrieved from urls in _urlArray new urls are inserted into _urlArray and the Hash Table mapping urls to index in _urlArray
-	vector<string> urlListFromLink;
-	vector<string> wordList;
-	list<int> wordIndexList;
+    // the links retrieved from urls in _urlArray new urls are inserted into _urlArray and the Hash Table mapping urls to index in _urlArray
+    vector<string> urlListFromLink;
+    vector<string> wordList;
+    list<int> wordIndexList;
 
-	// the int for the find function for url Hash Table; if url is found in Hash Table then fetch the index of the url in _urlArray and assign it to index
-	int index = 0;
+    // the int for the find function for url Hash Table; if url is found in Hash Table then fetch the index of the url in _urlArray and assign it to index
+    int index = 0;
 
-	//the while loop traversing the urls in _urlArray; adding urls to _urlArray
-	while(_headURL < _tailURL){
+    //the while loop traversing the urls in _urlArray; adding urls to _urlArray
+    while(_headURL < _tailURL){
 
-		//reinitialze the url description and other object
-		urlDescription = "";
-		urlContentWithoutTags = "";
-		urlListFromLink.clear();
-		wordList.clear();
+        //reinitialze the url description and other object
+        urlDescription = "";
+        urlContentWithoutTags = "";
+        urlListFromLink.clear();
+        wordList.clear();
         wordIndexList.clear();
-		//urlContent = NULL;
+        //urlContent = NULL;
 
-		//fetch the document from the url stored in _urlArray using the index _headURL
+        //fetch the document from the url stored in _urlArray using the index _headURL
         std::cout<<"---------------------------------------------"<<std::endl;
         std::cout<<"Number of Urls in the URL Hash Table: "<<_urlToUrlRecord->nElement<<std::endl;
         std::cout<<std::endl<<"Current URL: "<<_urlArray[_headURL]._url<<std::endl<<std::endl;
-	std::cout<<std::endl<<"Current Index Number in the _urlArray: "<<_headURL<<std::endl;
-		char * urlContent = fetchHTML(strdup(_urlArray[_headURL]._url), &nForFetchHTML);
-		if(urlContent==NULL || strlen(urlContent) == 0){
-			std::cout<<"Invalid URL!!!!"<<std::endl;
-			// if the content retrieved by fetchHTML isn't valid continue on to the next item in _urlArray and remove it from the HashTable and _urlArray	
-			_urlToUrlRecord->removeElement(_urlArray[_headURL]._url);
+        std::cout<<std::endl<<"Current Index Number in the _urlArray: "<<_headURL<<std::endl;
+        char * urlContent = fetchHTML(strdup(_urlArray[_headURL]._url), &nForFetchHTML);
+        if(urlContent==NULL || strlen(urlContent) == 0){
+            std::cout<<"Invalid URL!!!!"<<std::endl;
+            // if the content retrieved by fetchHTML isn't valid continue on to the next item in _urlArray and remove it from the HashTable and _urlArray	
+            _urlToUrlRecord->removeElement(_urlArray[_headURL]._url);
             std::cout<<"Removed Url: "<<_urlArray[_headURL]._url<<std::endl;
-			for(int i = _headURL; i < _tailURL; i++){
-				_urlArray[i] = _urlArray[i+1];
-			}
-			_tailURL--;
+            for(int i = _headURL; i < _tailURL; i++){
+                _urlArray[i] = _urlArray[i+1];
+            }
+            _tailURL--;
             std::cout<<"Number of Urls in the URL Hash Table after removal: "<<_urlToUrlRecord->nElement<<std::endl;
-			continue;
-		}
+            continue;
+        }
         
-		//parsing the HTML web page fetched from the url
-		multiParser.parse(urlContent, nForFetchHTML, strdup(_urlArray[_headURL]._url));
+        //parsing the HTML web page fetched from the url
+        multiParser.parse(urlContent, nForFetchHTML, strdup(_urlArray[_headURL]._url));
 
-		// Add title to the url description
-
-
-		//urlDescription = "Title: \n" + multiParser.getSiteTitle() + "\n";
+        // Add title to the url description
 
 
-		// Add main body of description to the url
-		string siteDescription = multiParser.getSiteDescription();
-		if(siteDescription.empty()){
-			siteDescription = "There is no description available for this site";
-		}
-		urlDescription =  siteDescription + "...";
+        //urlDescription = "Title: \n" + multiParser.getSiteTitle() + "\n";
 
-		// update the description of the URLRecord object of the url;
-		_urlArray[_headURL]._description = strdup(urlDescription.c_str());
 
-		//retrieve the url list parsed from the current url
-		urlListFromLink = multiParser.getSiteUrlList();
+        // Add main body of description to the url
+        string siteDescription = multiParser.getSiteDescription();
+        if(siteDescription.empty()){
+            siteDescription = "There is no description available for this site";
+        }
+        urlDescription =  siteDescription + "...";
 
-		//traverse the list
-		//
-		if(_tailURL < _maxUrls){
-				
-			for(std::vector<string>::iterator itr = urlListFromLink.begin(); itr != urlListFromLink.end(); itr++){
-				string newUrl = *itr;
-				std::cout<<"URLS from the link: "<<newUrl<<std::endl;
+        // update the description of the URLRecord object of the url;
+        _urlArray[_headURL]._description = strdup(urlDescription.c_str());
+
+        //retrieve the url list parsed from the current url
+        urlListFromLink = multiParser.getSiteUrlList();
+
+        //traverse the list
+        //
+        if(_tailURL < _maxUrls){
                 
-				//
-				if(!_urlToUrlRecord->find(newUrl, &index)){
-					std::cout<<"Inserting URL .... "<<std::endl;	
-					_urlToUrlRecord->insertItem(newUrl, _tailURL);  
-					 std::cout<<"Number of Urls in the URL Hash Table after insertion: "<<_urlToUrlRecord->nElement<<std::endl;
-					URLRecord newRecord;
-					newRecord._url = strdup(newUrl.c_str());
-					newRecord._description =  strdup("");
-					_urlArray[_tailURL] = newRecord;
-					_tailURL++;
+            for(std::vector<string>::iterator itr = urlListFromLink.begin(); itr != urlListFromLink.end(); itr++){
+                string newUrl = *itr;
+                std::cout<<"URLS from the link: "<<newUrl<<std::endl;
+                
+                //
+                if(!_urlToUrlRecord->find(newUrl, &index)){
+                    std::cout<<"Inserting URL .... "<<std::endl;	
+                    _urlToUrlRecord->insertItem(newUrl, _tailURL);  
+                     std::cout<<"Number of Urls in the URL Hash Table after insertion: "<<_urlToUrlRecord->nElement<<std::endl;
+                    URLRecord newRecord;
+                    newRecord._url = strdup(newUrl.c_str());
+                    newRecord._description =  strdup("");
+                    _urlArray[_tailURL] = newRecord;
+                    _tailURL++;
 
-				}
+                }
                 else{
                     std::cout<<"Link already recorded!"<<endl;
                 }
-				
+                
                 //exit for loop adding links if _urlArray is full
-				if(_tailURL == _maxUrls){
-					break;
-				}
-			}// end of for loop for adding urls to both the hashtable and _urlArray
+                if(_tailURL == _maxUrls){
+                    break;
+                }
+            }// end of for loop for adding urls to both the hashtable and _urlArray
             
-		}// end if for checking size of _urlArray
+        }// end if for checking size of _urlArray
 
 
 
-		//std::cout<<"Getting Through the insertion of links"<<std::endl;
-		
+        //std::cout<<"Getting Through the insertion of links"<<std::endl;
+        
         //Parsing the webpage content strip out text and punctuations
-		urlContentWithoutTags = multiParser.getSiteContent(); 
-		puncParser.setParseContent(urlContentWithoutTags);
-		puncParser.parsePunctuation();
-		wordList = puncParser.getParsedContent();
-			
+        urlContentWithoutTags = multiParser.getSiteContent(); 
+        puncParser.setParseContent(urlContentWithoutTags);
+        puncParser.parsePunctuation();
+        wordList = puncParser.getParsedContent();
+            
         
 
-		//std::cout<<"Word From the page: "<<std::endl;
-		for(std::vector<string>::iterator itrW = wordList.begin(); itrW != wordList.end(); itrW++){
-			string newWord = *itrW;
+        //std::cout<<"Word From the page: "<<std::endl;
+        for(std::vector<string>::iterator itrW = wordList.begin(); itrW != wordList.end(); itrW++){
+            string newWord = *itrW;
             wordIndexList.clear();
-			
+            
             
             _wordToURLRecordList->find(newWord, &wordIndexList);
             
@@ -280,20 +280,20 @@ WebCrawler::crawl(){
             }
             wordIndexList.push_back(_headURL);
             _wordToURLRecordList->insertItem(newWord, wordIndexList);
-		} // end of for loop for adding words 
+        } // end of for loop for adding words 
 
 
 
-		_headURL++;
+        _headURL++;
 
-	}// end of while loop for iterating through _urlArray
+    }// end of while loop for iterating through _urlArray
 
 
-			
-	int loopIndex = 0;
-	HashTableIterator<int> urlListsitr(*_urlToUrlRecord);
-	string demoKey = "";
-	int demoIndex = 0;
+            
+    int loopIndex = 0;
+    HashTableIterator<int> urlListsitr(*_urlToUrlRecord);
+    string demoKey = "";
+    int demoIndex = 0;
 
     for(int i = 0;i < _urlToUrlRecord->getTableSize(); i++){
         if(_urlToUrlRecord->_buckets[i].empty()){
@@ -334,7 +334,7 @@ WebCrawler::crawl(){
     }//
     
     cout<<NC;
-	cout<<endl<<endl<<GREEN<<"End of Crawling!"<<endl<<endl;
+    cout<<endl<<endl<<GREEN<<"End of Crawling!"<<endl<<endl;
         
     cout<<endl<<endl<<GREEN<<"Start Outputing Crawled Results..."<<endl;
 
@@ -378,9 +378,9 @@ WebCrawler::writeWordFile(string wordFileName){
     
     if(wordOutput.is_open()){
         
-	//wordOutput<<"Words Contained in Crawled Pages\n";
+    //wordOutput<<"Words Contained in Crawled Pages\n";
         
-	list<int> wordList(_maxUrls/2);
+    list<int> wordList(_maxUrls/2);
 
 
         for(int i = 0;i < _wordToURLRecordList->getTableSize(); i++){
@@ -393,7 +393,7 @@ WebCrawler::writeWordFile(string wordFileName){
                 for(list<int>::iterator wordIndexItr = (*itr)._data.begin(); wordIndexItr != (*itr)._data.end(); wordIndexItr++){
                    wordOutput<<(* wordIndexItr)<<" "; 
                 }
-		wordOutput<<"\n";
+                wordOutput<<"\n";
             }
             
         }
