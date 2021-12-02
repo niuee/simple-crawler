@@ -39,8 +39,8 @@ protected:
 public:
         // number of buckets
     
-		vector<vector<HashTableEntry<Data> > > _buckets;
-		
+        vector<vector<HashTableEntry<Data> > > _buckets;
+        
         int nElement;
  
         HashTable();
@@ -79,25 +79,25 @@ template <typename Data>
 HashTable<Data>::HashTable() {
     // TODO
 /*	
-	_buckets = new HashTableEntry<Data> *[TableSize];	
-	for(int i = 0;i < TableSize; i++){
+    _buckets = new HashTableEntry<Data> *[TableSize];	
+    for(int i = 0;i < TableSize; i++){
         _buckets[i] = NULL;
     }
 */
     _buckets.resize(TableSize);
-	nElement = 0;
+    nElement = 0;
 }
 
 template <typename Data>
 bool HashTable<Data>::insertItem(string key, Data data) {
     // TODO
     int hashcode = hash(key);
-	for(typename vector<HashTableEntry<Data> >::iterator itr = _buckets[hashcode].begin(); itr != _buckets[hashcode].end(); itr++){
-		if(!(*itr)._key.compare(key)){
-			(*itr)._data = data;
+    for(typename vector<HashTableEntry<Data> >::iterator itr = _buckets[hashcode].begin(); itr != _buckets[hashcode].end(); itr++){
+        if(!(*itr)._key.compare(key)){
+            (*itr)._data = data;
             return true;
-		}
-	}
+        }
+    }
     newEntry._key = key;
     newEntry._data = data;
     _buckets[hashcode].push_back(newEntry);

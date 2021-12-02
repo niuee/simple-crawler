@@ -10,35 +10,35 @@ using std::string;
 using std::vector;
 
 class SimpleHTMLParser {
-	// URL read in anchor
+    // URL read in anchor
 protected:
-	int urlAnchorLength;
-	char urlAnchor[MaxURLLength];
-	
-	vector<string> siteUrlList;
-	string siteDescription;
-	int descriptionCharCount;
+    int urlAnchorLength;
+    char urlAnchor[MaxURLLength];
+    
+    vector<string> siteUrlList;
+    string siteDescription;
+    int descriptionCharCount;
 
-	string siteHeader;
-	string siteContent;
+    string siteHeader;
+    string siteContent;
 
-	bool containSiteHeader;
-	bool containSiteDescription;
-	
-	bool match(char **b, const char *m);
+    bool containSiteHeader;
+    bool containSiteDescription;
+    
+    bool match(char **b, const char *m);
  public:
-	SimpleHTMLParser();
-	
-	bool parse(char * buffer, int n, char * urlCurrent);
-	// Calbacks
-	virtual void onContentFound(char c);
-	virtual void onAnchorFound(char * url);
+    SimpleHTMLParser();
+    
+    bool parse(char * buffer, int n, char * urlCurrent);
+    // Calbacks
+    virtual void onContentFound(char c);
+    virtual void onAnchorFound(char * url);
 
-	string getSiteDescription();
-	vector<string> getSiteUrlList();
-	string getSiteTitle();
-	string getSiteContent();
-	
+    string getSiteDescription();
+    vector<string> getSiteUrlList();
+    string getSiteTitle();
+    string getSiteContent();
+    
 };
 
 #endif

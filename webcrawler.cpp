@@ -20,9 +20,6 @@
 #define BLUE "\033[1;34m"
 #define NC "\033[0m"
 
-// Add your implementation here
-
-
 
 
 using std::cout;
@@ -32,7 +29,7 @@ using std::vector;
 using std::list;
 
 
-//TODO problem is with the _headURL iteration check that
+
 
 
 int main(int argc, char const *argv[])
