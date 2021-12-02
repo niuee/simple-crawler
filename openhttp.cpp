@@ -63,18 +63,18 @@ char * fetchHTML( const char * url, int * n) {
     if (res != CURLE_OK) {
         fprintf(stderr, "curl_easy_perform() failed! %s\n",
                 curl_easy_strerror(res));
-		//std::cout<<"Returned Here: 3"<<std::endl;
+        //std::cout<<"Returned Here: 3"<<std::endl;
 
-		return NULL;
+        return NULL;
     }
 
      //always cleanup 
     curl_easy_cleanup(curl);
 
     *n = s.len;
-	//std::cout<<"Returned Here: 1"<<std::endl;
+    //std::cout<<"Returned Here: 1"<<std::endl;
     if(strlen(s.ptr) == 0){
-            std::cout<<"Empty String"<<std::endl;
+        std::cout<<"Empty String"<<std::endl;
     }
     return s.ptr;
 }
